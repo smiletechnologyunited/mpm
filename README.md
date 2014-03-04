@@ -1,0 +1,4 @@
+mpm
+===
+
+Maya Package Manager
