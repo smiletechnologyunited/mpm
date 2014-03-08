@@ -1,0 +1,6 @@
+
+global proc mpmSample()
+{
+	print("hello, I am 'mpmSample.mel'.\n");
+}
+
