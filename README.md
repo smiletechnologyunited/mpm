@@ -34,9 +34,9 @@ download and copy mpm to your scripts and python path.
 
 edit userSetup.mel
 
-'''
+```
 mpmInitialize();
-'''
+```
 
 
 configuration
@@ -46,16 +46,16 @@ make mpm.json to your Maya.env directory.
 
 minimum example
 
-'''
+```
 [
     {
 		"origin": "smiletechnologyunited/maya_package_sample.git"
     }
 ]
-'''
+```
 
 maximum example 
-'''
+```
 [
     {
 		"name": "mpm_package_sample",
@@ -64,7 +64,7 @@ maximum example
 		"disable": false
     }
 ]
-'''
+```
 
 support protocol is git(github, bitbucket), svn, hg and fileserver.
 
@@ -80,8 +80,10 @@ install packages
 ----------------
 
 mel command 'mpmInstall'
+
 or 
-push 'install all' on mpmPackageManager.
+
+push 'Install all packages' on mpmPackageManager.
 
 update packages
 ---------------
@@ -89,11 +91,14 @@ update packages
 if you did not lock revision, you can upadte package.
 
 mel command 'mpmUpdate'
+
 or 
-push 'update all' or 'update' for each packages on mpmPackageManager.
+
+push 'Update all packages' or 'update' for each packages on mpmPackageManager.
 
 
 enjoy!
+
 ... and join contributors!
 
 
