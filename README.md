@@ -3,12 +3,34 @@ mpm
 
 Maya Package Manager
 
-preview version.
+management maya package(like maya module) and plug-ins.
+
+this is preview version for developers.
+
+
+requirements
+------------
+
+Maya:
+
+* 2014
+
+Platform:
+
+* osx
+* windows
+* linux
+
+Extension:
+
+* git (for clone git repository)
+* hg (for clone hg repository)
+* svn (for checkout svn repository)
 
 setup
 -----
 
-download and copy mpm to script path and python path.
+download and copy mpm to your scripts and python path.
 
 edit userSetup.mel
 
@@ -20,7 +42,7 @@ mpmInitialize();
 configuration
 -------------
 
-save mpm.json to Maya.env directory.
+make mpm.json to your Maya.env directory.
 
 minimum example
 
@@ -44,10 +66,15 @@ maximum example
 ]
 '''
 
-support git(github, bitbucket), svn, hg and fileserver.
+support protocol is git(github, bitbucket), svn, hg and fileserver.
 
-recommented git.
-not recommented fileserver. :(
+recommended git.
+not recommended fileserver. :(
+
+gui
+---
+
+mel command 'mpmPackageManager'
 
 install packages
 ----------------
@@ -59,7 +86,7 @@ push 'install all' on mpmPackageManager.
 update packages
 ---------------
 
-if you do not lock revision, you can upadte package.
+if you did not lock revision, you can upadte package.
 
 mel command 'mpmUpdate'
 or 
