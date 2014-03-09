@@ -36,7 +36,7 @@ class Sync(object):
     def __init__(self):
         pass
 
-    def clone(self, origin, dirpath):
+    def clone(self, uri, dirpath):
         pass
 
     def update(self, dirpath):
@@ -47,7 +47,18 @@ class SyncRsync(Sync):
     def __init__(self):
         pass
 
-    def clone(self, origin, dirpath):
+    def clone(self, uri, dirpath):
+        pass
+
+    def update(self, dirpath):
+        pass
+
+
+class SyncSvn(Sync):
+    def __init__(self):
+        pass
+
+    def clone(self, uri, dirpath):
         pass
 
     def update(self, dirpath):
@@ -61,11 +72,13 @@ class SyncGit(Sync):
         else:
             self.shell = False
 
-    def clone(self, origin, dirpath):
+    def clone(self, uri, dirpath):
         if os.path.isdir(dirpath):
             return
 
-        cmd = ["git", "clone", origin, dirpath]
+        cmd = ["git", "clone", uri, dirpath]
+
+        logging.info("clonning {0}...".format(uri))
 
         sys.stderr.write(" ".join(cmd))
         p = subprocess.Popen(
@@ -83,6 +96,7 @@ class SyncGit(Sync):
         if not os.path.isdir(dirpath):
             return
 
+        #cmd = ["git", "pull", "--rebase", dirpath]
         cmd = ["git", "pull", dirpath]
 
         p = subprocess.Popen(
@@ -91,7 +105,6 @@ class SyncGit(Sync):
             stderr=subprocess.PIPE,
             shell=self.shell)
         (stdout, stderr) = p.communicate()
-        #if p.returncode and not p.returncode == 1:
         if p.returncode:
             #sys.stdout.write(stdout)
             #sys.stderr.write(stderr)
