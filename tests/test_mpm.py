@@ -44,14 +44,14 @@ class MpmTestCase(unittest.TestCase):
 
     def test_load_config(self):
         conf_filepath = thisDir("fixtures/mpm.conf")
-        sync_dirpath = homeDir("./temp/")
+        sync_dirpath = homeDir("temp")
         conf = mpm.core.Configuration(conf_filepath, sync_dirpath)
 
         self.assertEqual(1, 1)
 
     def test_clone(self):
         conf_filepath = thisDir("fixtures/mpm.conf")
-        sync_dirpath = homeDir("./temp/")
+        sync_dirpath = homeDir("temp")
         conf = mpm.core.Configuration(conf_filepath, sync_dirpath)
 
         # clone packages.
@@ -63,7 +63,7 @@ class MpmTestCase(unittest.TestCase):
 
     def test_update(self):
         conf_filepath = thisDir("fixtures/mpm.conf")
-        sync_dirpath = homeDir("./temp/")
+        sync_dirpath = homeDir("temp")
         conf = mpm.core.Configuration(conf_filepath, sync_dirpath)
 
         # clone packages.
