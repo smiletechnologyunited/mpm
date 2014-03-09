@@ -23,6 +23,7 @@
 
 from __future__ import print_function
 import os
+import platform
 
 
 class MpmError(Exception):
@@ -54,10 +55,18 @@ def is_osx():
 
 
 def is_win():
+    uname = platform.uname()
+    if uname[0] == "Windows":
+        return True
+
     return False
 
 
 def is_linux():
+    uname = os.uname()
+    if uname[0] == "Linux":
+        return True
+
     return False
 
 
