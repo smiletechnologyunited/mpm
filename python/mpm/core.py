@@ -76,7 +76,8 @@ class PackageEnvironment(object):
         # add path
         for (envname, dirname) in self.DIR_TYPES:
             path = os.path.join(p, dirname)
-            self._add_path(envname, path)
+            if os.path.exists(path):
+                self._add_path(envname, path)
 
 
 class Configuration(object):
@@ -132,9 +133,6 @@ class Configuration(object):
             path = os.path.join(self._sync_dirpath, name)
 
             # other
-            if "scm" in c:
-                scm = c["scm"]
-
             if "revision" in c:
                 revision = c["revision"]
             else:
