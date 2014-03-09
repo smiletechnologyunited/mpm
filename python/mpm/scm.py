@@ -62,6 +62,9 @@ class SyncGit(Sync):
             self.shell = False
 
     def clone(self, origin, dirpath):
+        if os.path.isdir(dirpath):
+            return
+
         cmd = ["git", "clone", origin, dirpath]
 
         sys.stderr.write(" ".join(cmd))
@@ -77,7 +80,10 @@ class SyncGit(Sync):
             raise mpm.util.MpmSyncError(stderr)
 
     def update(self, dirpath):
-        cmd = ["git", "pull", "origin", "master"]
+        if not os.path.isdir(dirpath):
+            return
+
+        cmd = ["git", "pull", dirpath]
 
         p = subprocess.Popen(
             cmd,
@@ -85,6 +91,12 @@ class SyncGit(Sync):
             stderr=subprocess.PIPE,
             shell=self.shell)
         (stdout, stderr) = p.communicate()
+        #if p.returncode and not p.returncode == 1:
+        if p.returncode:
+            #sys.stdout.write(stdout)
+            #sys.stderr.write(stderr)
+            raise mpm.util.MpmSyncError(stderr)
+
 
 
 if __name__ == '__main__':

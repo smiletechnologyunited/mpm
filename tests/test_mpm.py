@@ -33,21 +33,45 @@ def thisDir(name):
     return os.path.join(current, name)
 
 
+def homeDir(name):
+    home = os.path.expanduser("~")
+    return os.path.join(home, name)
+
+
 class MpmTestCase(unittest.TestCase):
     def setUp(self):
         pass
 
     def test_load_config(self):
-        pass
-
         conf_filepath = thisDir("fixtures/mpm.conf")
-        sync_dirpath = thisDir("./temp/")
+        sync_dirpath = homeDir("./temp/")
+        conf = mpm.core.Configuration(conf_filepath, sync_dirpath)
+
+        self.assertEqual(1, 1)
+
+    def test_clone(self):
+        conf_filepath = thisDir("fixtures/mpm.conf")
+        sync_dirpath = homeDir("./temp/")
         conf = mpm.core.Configuration(conf_filepath, sync_dirpath)
 
         # clone packages.
         for p in conf.get_packages():
             s = p["scm"]()
             s.clone(p["origin"], p["path"])
+
+        self.assertEqual(1, 1)
+
+    def test_update(self):
+        conf_filepath = thisDir("fixtures/mpm.conf")
+        sync_dirpath = homeDir("./temp/")
+        conf = mpm.core.Configuration(conf_filepath, sync_dirpath)
+
+        # clone packages.
+        for p in conf.get_packages():
+            s = p["scm"]()
+            s.update(p["path"])
+
+        self.assertEqual(1, 1)
 
 
 # EOF
