@@ -24,7 +24,6 @@ Platform:
 Extension:
 
 * git (for clone git repository)
-* hg (for clone hg repository)
 * svn (for checkout svn repository)
 
 setup
@@ -66,7 +65,7 @@ maximum example
 ]
 ```
 
-support protocol is git(github, bitbucket), svn, hg and fileserver.
+support protocol is git(github, bitbucket), svn, and fileserver.
 
 recommended git.
 not recommended fileserver. :(
