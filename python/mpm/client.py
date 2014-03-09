@@ -34,7 +34,7 @@ import mpm.util
 logging.basicConfig(level=logging.INFO)
 
 
-CONFNAMENAME = "mpm.json"
+CONFNAMENAME = "mpm.conf"
 SYNCDIRNAME = "mpm"
 
 

@@ -40,7 +40,7 @@ class MpmTestCase(unittest.TestCase):
     def test_load_config(self):
         pass
 
-        conf_filepath = thisDir("fixtures/mpm.json")
+        conf_filepath = thisDir("fixtures/mpm.conf")
         sync_dirpath = thisDir("./temp/")
         conf = mpm.core.Configuration(conf_filepath, sync_dirpath)
 

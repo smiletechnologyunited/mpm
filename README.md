@@ -41,7 +41,7 @@ mpmInitialize();
 configuration
 -------------
 
-make mpm.json to your Maya.env directory.
+make mpm.conf to your Maya.env directory.
 
 minimum example
 
