@@ -27,27 +27,13 @@ import sys
 import site
 import logging
 import json
+import re
 
-import util
+import mpm.util
+import mpm.scm
 
 
 logging.basicConfig(level=logging.INFO)
-
-
-class MpmError(Exception):
-    pass
-
-
-class MpmConfigurationError(MpmError):
-    pass
-
-
-class MpmSyncError(MpmError):
-    pass
-
-
-class MpmRuntimeError(MpmError):
-    pass
 
 
 class PackageEnvironment(object):
@@ -59,9 +45,9 @@ class PackageEnvironment(object):
     ]
 
     def __init__(self):
-        if util.is_osx() or util.is_linux():
+        if mpm.util.is_osx() or mpm.util.is_linux():
             self._sp_c = ":"
-        elif util.is_win():
+        elif mpm.util.is_win():
             self._sp_c = ";"
 
     def _add_path(self, envname, path):
@@ -79,7 +65,8 @@ class PackageEnvironment(object):
             if path in paths:
                 return
 
-            os.environ[envname] += ":"+path
+            os.environ[envname] = "{0}{1}{2}".format(
+                os.environ[envname], self._sp_c, path)
             logging.info("add {0}".format(path))
 
     def add_package(self, p):
@@ -93,59 +80,74 @@ class PackageEnvironment(object):
 
 
 class Configuration(object):
-    def __init__(self, filename=None):
-        if filename:
-            with open(filename) as fp:
-                self._conf = json.load(fp)
-        else:
-            self._conf = []
+    def __init__(self, conf_filepath, sync_dirpath="./"):
+        with open(conf_filepath) as fp:
+            self._conf = json.load(fp)
+
+        self._sync_dirpath = sync_dirpath
+
+    def detect(self, origin):
+        pass
 
     def get_packages(self):
-        result = []
+        packages = []
         for c in self._conf:
-            tmp = {
-                "name": c["name"],
-                "path": c["origin"],
-                "scm": None,
-                "revision": None,
-                "disable": False,
-                "origin": c["origin"],
-            }
-            result.append(tmp)
-        return result
+            # name
+            if "name" in c:
+                name = c["name"]
+            else:
+                name = os.path.basename(c["origin"])
+                if name.endswith(".git"):
+                    name = name[:-4]
 
+            # origin
+            protocol = None
+            m = re.search(r"^[^:]*", c["origin"])
+            if m:
+                protocol = m.group()
 
-class Sync(object):
-    def __init__(self):
-        pass
+            if protocol in ["http", "https"]:
+                uri = c["origin"]
+                if c["origin"].endswith(".git"):
+                    scm = mpm.scm.SyncGit
+                else:
+                    scm = mpm.scm.SyncSvn
+            elif protocol in ["git"]:
+                uri = c["origin"]
+                scm = mpm.scm.SyncGit
+            elif protocol in ["svn"]:
+                uri = c["origin"]
+                scm = mpm.scm.SyncGit
+            elif protocol in ["ssh"]:
+                uri = c["origin"]
+                scm = mpm.scm.SyncGit
+            elif c["origin"].startswith("/"):
+                uri = c["origin"]
+                scm = mpm.scm.SyncRsync
+            else:
+                uri = "git://github.com/{0}".format(c["origin"])
+                scm = mpm.scm.SyncGit
 
-    def sync():
-        pass
+            # path
+            path = os.path.join(self._sync_dirpath, name)
 
-    def revision():
-        pass
+            # other
+            if "scm" in c:
+                scm = c["scm"]
 
+            if "revision" in c:
+                revision = c["revision"]
+            else:
+                revision = None
 
-class SyncNothing(Sync):
-    def __init__(self):
-        pass
-
-    def sync():
-        pass
-
-    def revision():
-        pass
-
-
-class SyncGit(Sync):
-    def __init__(self):
-        pass
-
-    def sync():
-        pass
-
-    def revision():
-        pass
+            packages.append({
+                "name": name,
+                "path": path,
+                "origin": uri,
+                "revision": revision,
+                "scm": scm,
+            })
+        return packages
 
 
 if __name__ == '__main__':

@@ -25,6 +25,26 @@ from __future__ import print_function
 import os
 
 
+class MpmError(Exception):
+    pass
+
+
+class MpmConfigurationError(MpmError):
+    pass
+
+
+class MpmSyncError(MpmError):
+    pass
+
+
+class MpmRuntimeError(MpmError):
+    pass
+
+
+class MpmSyncError(MpmError):
+    pass
+
+
 def is_osx():
     uname = os.uname()
     if uname[0] == "Darwin":

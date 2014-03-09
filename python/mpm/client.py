@@ -34,11 +34,11 @@ import mpm.util
 logging.basicConfig(level=logging.INFO)
 
 
-CONFNAME = "mpm.json"
-SYNCDIR = "~/mpm"
+CONFNAMENAME = "mpm.json"
+SYNCDIRNAME = "mpm"
 
 
-def _find_conf():
+def _get_app_dirpath():
 
     if "MAYA_APP_DIR" in os.environ:
         # MAYA_APP_DIR
@@ -55,54 +55,55 @@ def _find_conf():
         else:
             raise mpm.core.MpmConfigurationError("unsupported platform.")
 
+    return app_dir
+
+
+def _get_version_dirname():
     version = pm.about(version=True)
 
     version_dir = version
     if pm.about(is64=True):
         version_dir = "{0}-x64".format(version)
 
-    filename = os.path.join(app_dir, version_dir, CONFNAME)
+    return version_dir
+
+
+def _get_conf_filepath():
+    app_dir = _get_app_dirpath()
+    version_dir = _get_version_dirname()
+    filename = os.path.join(app_dir, version_dir, CONFNAMENAME)
     return filename
 
 
-def _load():
-    conf = _find_conf()
-    mpm.core.Configuration(conf)
+def _get_sync_dirpath():
+    app_dir = _get_app_dirpath()
+    version_dir = _get_version_dirname()
+    dirname = os.path.join(app_dir, version_dir, SYNCDIRNAME)
+    return dirname
+
+
+def _get_conf_info():
+    conf_filepath = _get_conf_filepath()
+    if not os.path.isfile(conf_filepath):
+        raise mpm.core.MpmConfigurationError("can't find configuration file.")
+
+    sync_dirpath = _get_sync_dirpath()
+    if not os.path.isdir(sync_dirpath):
+        logging.info("make directory. ({0})".format(sync_dirpath))
+        os.makedirs(sync_dirpath)
+
+    return (conf_filepath, sync_dirpath)
 
 
 def info():
     """
     display package info.
     """
-    _load()
+    (conf_filepath, sync_dirpath) = _get_conf_info()
+    conf = mpm.core.Configuration(conf_filepath, sync_dirpath)
 
-    return
-
-
-def install():
-    """
-    install packages.
-    """
-
-    # TODO: clone packages.
-    pass
-
-
-def update():
-    """
-    update packages.
-    """
-    # TODO: unload all plug-ins
-    pass
-
-    # TODO: update packages.
-    pass
-
-
-def initialize():
-    """
-    update packages.
-    """
+    for p in conf.get_packages():
+        sys.stdout.write("")
 
     '''
     import pprint
@@ -115,27 +116,54 @@ def initialize():
     pp.pprint(sys.path)
     '''
 
-    # TODO: read configuration.
-    conf = mpm.core.Configuration()
-    pkgs = conf.get_packages()
 
-    # TODO: manage SCM.
+def install():
+    """
+    install packages.
+    """
+    (conf_filepath, sync_dirpath) = _get_conf_info()
+    conf = mpm.core.Configuration(conf_filepath, sync_dirpath)
+
+    # clone packages.
+    for p in conf.get_packages():
+        logging.info("clonning {0}...".format(p["origin"]))
+        s = p["scm"]()
+        s.clone(p["origin"], p["path"])
+
+
+def update():
+    """
+    update packages.
+    """
+
+    # TODO: unload all plug-ins
+    pass
+
+    # TODO: update packages.
+    pass
+
+
+def initialize():
+    """
+    update packages.
+    """
+    # read configuration.
+    (conf_filepath, sync_dirpath) = _get_conf_info()
+    conf = mpm.core.Configuration(conf_filepath, sync_dirpath)
 
     # edit environment variables.
-    pkgenv = mpm.core.PackageEnvironment()
-    for p in pkgs:
-        if p["disable"]:
-            continue
+    for p in conf.get_packages():
         pkgenv.add_package(p["path"])
 
 
 def gui():
     """
-    open manager window.
+    open window.
     """
     dialog = pm.loadUI(
         uiFile='/Users/ryo/Dropbox/dev/STU/mpm/src/qtui/mainwindow.ui')
     pm.showWindow(dialog)
+
 
 if __name__ == '__main__':
     pass

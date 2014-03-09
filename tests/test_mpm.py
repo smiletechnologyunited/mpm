@@ -23,14 +23,31 @@
 
 
 import unittest
+import os
+
+import mpm.core
+
+
+def thisDir(name):
+    current = os.path.abspath(os.path.dirname(__file__))
+    return os.path.join(current, name)
 
 
 class MpmTestCase(unittest.TestCase):
-    def __init__(self):
+    def setUp(self):
         pass
 
-    def test_manager(self):
+    def test_load_config(self):
         pass
+
+        conf_filepath = thisDir("fixtures/mpm.json")
+        sync_dirpath = thisDir("./temp/")
+        conf = mpm.core.Configuration(conf_filepath, sync_dirpath)
+
+        # clone packages.
+        for p in conf.get_packages():
+            s = p["scm"]()
+            s.clone(p["origin"], p["path"])
 
 
 # EOF
