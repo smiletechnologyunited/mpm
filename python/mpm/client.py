@@ -24,6 +24,7 @@
 from __future__ import print_function
 import os
 import logging
+import shutil
 
 import pymel.core as pm
 
@@ -53,7 +54,7 @@ def _get_app_dirpath():
         elif mpm.util.is_linux():
             app_dir = os.path.expanduser("~/maya/")
         else:
-            raise mpm.core.MpmConfigurationError("unsupported platform.")
+            raise mpm.util.MpmConfigurationError("unsupported platform.")
 
     return app_dir
 
@@ -85,7 +86,7 @@ def _get_sync_dirpath():
 def _get_conf_info():
     conf_filepath = _get_conf_filepath()
     if not os.path.isfile(conf_filepath):
-        raise mpm.core.MpmConfigurationError("can't find configuration file.")
+        raise mpm.util.MpmConfigurationError("can't find configuration file.")
 
     sync_dirpath = _get_sync_dirpath()
     if not os.path.isdir(sync_dirpath):
@@ -126,9 +127,26 @@ def install():
 
     # clone packages.
     for p in conf.get_packages():
-        logging.info("clonning {0}...".format(p["origin"]))
         s = p["scm"]()
         s.clone(p["origin"], p["path"])
+
+    # initialize again
+    initialize()
+
+
+def clean():
+    """
+    clean up packages.
+    """
+    (conf_filepath, sync_dirpath) = _get_conf_info()
+
+    for p in os.listdir(sync_dirpath):
+        target = os.path.join(sync_dirpath, p)
+        if os.path.isdir(target):
+            shutil.rmtree(target)
+        else:
+            os.remove(target)
+        logging.info("rm {0}".format(target))
 
 
 def update():
@@ -145,11 +163,13 @@ def update():
 
 def initialize():
     """
-    update packages.
+    initialize environment.
     """
     # read configuration.
     (conf_filepath, sync_dirpath) = _get_conf_info()
     conf = mpm.core.Configuration(conf_filepath, sync_dirpath)
+
+    pkgenv = mpm.core.PackageEnvironment()
 
     # edit environment variables.
     for p in conf.get_packages():
