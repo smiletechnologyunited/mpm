@@ -72,18 +72,17 @@ not recommended fileserver. :(
 install packages
 ----------------
 
-mel command 'mpmInstall'
+MEL command 'mpmInstall'
 
 update packages
 ---------------
 
 if you did not lock revision, you can upadte packages.
 
-mel command 'mpmUpdate'
+MEL command 'mpmUpdate'
 
 
-
-
+----
 
 
 enjoy!
