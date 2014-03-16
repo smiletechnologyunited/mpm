@@ -43,19 +43,22 @@ configuration
 
 make mpm.conf to your Maya.env directory.
 
-minimum example
+small example
 
 ```
 [
-    {
-		"origin": "smiletechnologyunited/maya_package_sample.git"
-    }
+    {"origin": "smiletechnologyunited/maya_package_sample.git"}
 ]
 ```
 
-maximum example 
+large example 
 ```
 [
+    {
+		"name": "mpm_plugins_manager",
+		"origin": "git://github.com/smiletechnologyunited/mpm_plugins_manager.git",
+		"revision": "9ea698baa952a2ba054925946c8aea6eaf77170c",
+    },
     {
 		"name": "mpm_package_sample",
 		"origin": "https://github.com/smiletechnologyunited/maya_package_sample.git",
