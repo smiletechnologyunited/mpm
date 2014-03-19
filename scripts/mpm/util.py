@@ -47,6 +47,9 @@ class MpmSyncError(MpmError):
 
 
 def is_osx():
+    if not hasattr(os, "uname"):
+        return False
+
     uname = os.uname()
     if uname[0] == "Darwin":
         return True
@@ -63,6 +66,9 @@ def is_win():
 
 
 def is_linux():
+    if not hasattr(os, "uname"):
+        return False
+
     uname = os.uname()
     if uname[0] == "Linux":
         return True

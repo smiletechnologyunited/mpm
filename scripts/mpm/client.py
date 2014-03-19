@@ -62,6 +62,7 @@ def _get_app_dirpath():
 def _get_version_dirname():
     version = pm.about(version=True)
 
+    version = version.split(" ")[0]
     version_dir = version
     if pm.about(is64=True):
         version_dir = "{0}-x64".format(version)
@@ -86,7 +87,7 @@ def _get_sync_dirpath():
 def _get_conf_info():
     conf_filepath = _get_conf_filepath()
     if not os.path.isfile(conf_filepath):
-        raise mpm.util.MpmConfigurationError("can't find configuration file.")
+        raise mpm.util.MpmConfigurationError("can't find configuration file.({0})".format(conf_filepath))
 
     sync_dirpath = _get_sync_dirpath()
     if not os.path.isdir(sync_dirpath):
