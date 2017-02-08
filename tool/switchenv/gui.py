@@ -30,7 +30,7 @@ class MainWindow(QtGui.QMainWindow, ui.switchenv.Ui_MainWindow):
 
         self.setWindowTitle(self.TITLE)
 
-        versions = ["2015-x64", "2016", "2017"]
+        versions = ["2015-x64", "2016", "2016.5", "2017"]
         for version in versions:
             self.version.addItem(version, version)
 
